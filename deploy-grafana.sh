@@ -15,24 +15,28 @@ apt-get update
 echo "[*] Installing required dependencies..."
 apt-get install -y docker-compose
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo systemctl status docker
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
 need_cmd() {
-  command -v "$1" >/dev/null 2>&1 || { echo "[!] Missing: $1" >&2; exit 1; }
+    command -v "$1" >/dev/null 2>&1 || { echo "[!] Missing: $1" >&2; exit 1; }
 }
 
 need_cmd docker
 
 if ! docker compose version >/dev/null 2>&1; then
-  echo "[!] Docker Compose plugin is missing" >&2
-  exit 1
+    echo "[!] Docker Compose plugin is missing" >&2
+    exit 1
 fi
 
 [[ -f .env ]] || { echo "[!] Create .env from .env.example first" >&2; exit 1; }
 [[ -f secrets/grafana_admin_password.txt ]] || { echo "[!] Missing secrets/grafana_admin_password.txt" >&2; exit 1; }
 
-mkdir -p grafana/data prometheus_data
+mkdir -p grafana/data prometheus/data
 
 echo "[*] Pulling images..."
 docker compose pull
@@ -42,20 +46,20 @@ docker compose up -d --remove-orphans
 
 echo "[*] Waiting for Grafana..."
 for _ in $(seq 1 60); do
-  if docker compose exec -T grafana sh -lc 'wget -qO- http://localhost:3000/api/health | grep -q "\"database\":\"ok\""'; then
-    echo "[+] Grafana is healthy"
-    break
-  fi
-  sleep 2
+    if docker compose exec -T grafana sh -lc 'wget -qO- http://localhost:3000/api/health | grep -q "\"database\":\"ok\""'; then
+        echo "[+] Grafana is healthy"
+        break
+    fi
+    sleep 2
 done
 
 echo "[*] Waiting for Prometheus..."
 for _ in $(seq 1 60); do
-  if docker compose exec -T prometheus sh -lc 'wget -qO- http://localhost:9090/-/ready | grep -q "Ready"'; then
-    echo "[+] Prometheus is ready"
-    break
-  fi
-  sleep 2
+    if docker compose exec -T prometheus sh -lc 'wget -qO- http://localhost:9090/-/ready | grep -q "Ready"'; then
+        echo "[+] Prometheus is ready"
+        break
+    fi
+    sleep 2
 done
 
 echo ""
