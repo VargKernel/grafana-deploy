@@ -9,6 +9,8 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+sudo systemctl status docker
+
 chown -R 472:472 ./grafana/data
 chmod -R 750 ./grafana/data
 
