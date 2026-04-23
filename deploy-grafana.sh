@@ -22,8 +22,13 @@ sudo systemctl enable docker
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
-# Create directories
+[[ -f .env ]] || { echo "[!] Create .env from .env.example first" >&2; exit 1; }
+[[ -f secrets/grafana_admin_password.txt ]] || { echo "[!] Missing secrets/grafana_admin_password.txt" >&2; exit 1; }
+
+docker-compose down --remove-orphans || true
+
 mkdir -p grafana/data prometheus/data
+rm -f ./prometheus/data/queries.active 
 
 # Grafana permissions (UID 472)
 chown -R 472:472 ./grafana/data
@@ -31,7 +36,7 @@ chmod -R 755 ./grafana/data
 
 # Prometheus permissions (UID 65534)
 chown -R 65534:65534 ./prometheus/data
-chmod -R 755 ./prometheus/data
+chmod -R 777 ./prometheus/data
 
 need_cmd() {
     command -v "$1" >/dev/null 2>&1 || { echo "[!] Missing: $1" >&2; exit 1; }
