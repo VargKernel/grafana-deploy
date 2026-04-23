@@ -1,0 +1,12 @@
+.env
+
+secrets/*
+!secrets/.gitkeep
+
+grafana/data/*
+!grafana/data/.gitkeep
+
+prometheus_data/*
+!prometheus_data/.gitkeep
+
+*.log
