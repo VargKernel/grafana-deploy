@@ -9,8 +9,10 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-# Create directories
+docker-compose down --remove-orphans || true
+
 mkdir -p grafana/data prometheus/data
+rm -f ./prometheus/data/queries.active 
 
 # Grafana permissions (UID 472)
 chown -R 472:472 ./grafana/data
@@ -18,7 +20,7 @@ chmod -R 755 ./grafana/data
 
 # Prometheus permissions (UID 65534)
 chown -R 65534:65534 ./prometheus/data
-chmod -R 755 ./prometheus/data
+chmod -R 777 ./prometheus/data
 
 docker compose down
 docker compose up -d
