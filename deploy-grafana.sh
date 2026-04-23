@@ -14,8 +14,7 @@ apt-get update
 
 echo "[*] Installing required dependencies..."
 # docker.io provides the daemon (dockerd)
-# docker-compose-plugin provides the 'docker compose' command
-apt-get install -y docker.io docker-compose-plugin
+apt-get install -y docker.io
 
 sudo systemctl start docker
 sudo systemctl enable docker
