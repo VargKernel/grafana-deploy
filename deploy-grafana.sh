@@ -22,6 +22,17 @@ sudo systemctl enable docker
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
+# Create directories
+mkdir -p grafana/data prometheus/data
+
+# Grafana permissions (UID 472)
+chown -R 472:472 ./grafana/data
+chmod -R 750 ./grafana/data
+
+# Prometheus permissions (UID 65534)
+chown -R 65534:65534 ./prometheus/data
+chmod -R 750 ./prometheus/data
+
 need_cmd() {
     command -v "$1" >/dev/null 2>&1 || { echo "[!] Missing: $1" >&2; exit 1; }
 }
