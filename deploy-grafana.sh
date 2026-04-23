@@ -55,23 +55,23 @@ docker compose pull
 echo "[*] Starting stack..."
 docker compose up -d --remove-orphans
 
-echo "[*] Waiting for Grafana..."
-for _ in $(seq 1 60); do
-    if docker compose exec -T grafana sh -lc 'wget -qO- http://localhost:3000/api/health | grep -q "\"database\":\"ok\""'; then
-        echo "[+] Grafana is healthy"
-        break
-    fi
-    sleep 2
-done
-
-echo "[*] Waiting for Prometheus..."
-for _ in $(seq 1 60); do
-    if docker compose exec -T prometheus sh -lc 'wget -qO- http://localhost:9090/-/ready | grep -q "Ready"'; then
-        echo "[+] Prometheus is ready"
-        break
-    fi
-    sleep 2
-done
+# echo "[*] Waiting for Grafana..."
+# for _ in $(seq 1 60); do
+#     if docker compose exec -T grafana sh -lc 'wget -qO- http://localhost:3000/api/health | grep -q "\"database\":\"ok\""'; then
+#         echo "[+] Grafana is healthy"
+#         break
+#     fi
+#     sleep 2
+# done
+# 
+# echo "[*] Waiting for Prometheus..."
+# for _ in $(seq 1 60); do
+#     if docker compose exec -T prometheus sh -lc 'wget -qO- http://localhost:9090/-/ready | grep -q "Ready"'; then
+#         echo "[+] Prometheus is ready"
+#         break
+#     fi
+#     sleep 2
+# done
 
 echo ""
 docker compose ps
