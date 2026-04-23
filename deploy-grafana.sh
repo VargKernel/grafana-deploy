@@ -14,7 +14,7 @@ apt-get update
 
 echo "[*] Installing required dependencies..."
 # docker.io provides the daemon (dockerd)
-apt-get install -y docker.io
+apt-get install -y docker.io docker-compose
 
 sudo systemctl start docker
 sudo systemctl enable docker
