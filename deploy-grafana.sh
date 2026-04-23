@@ -18,7 +18,6 @@ apt-get install -y docker.io
 
 sudo systemctl start docker
 sudo systemctl enable docker
-sudo systemctl status docker
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
